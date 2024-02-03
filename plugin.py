@@ -4,7 +4,7 @@
 
 
 """
-<plugin key="Aldes TOne Air" name="Aldes T.One Air Cloud" author="Ludo" version="1.0.0" externallink="">
+<plugin key="Aldes TOne Air" name="Aldes T.One Air Cloud" author="Ludo" version="1.0.0" externallink="https://github.com/ludosaxo/Domoticz-Aldes">
     <description>Aldes T.One Air plugin to get Temperatures, setpoints and Modes<br/>Please provide your email and password of your Aldes account</description>
     <params>
         <param field="Username" label="Username" width="200px" required="true" default="">
@@ -61,7 +61,7 @@ class AldesPlugin:
         Domoticz.Status("Username : "+str(Parameters["Username"]))
         Domoticz.Status("Password : "+str(Parameters["Password"]))
         login = str(Parameters["Username"])
-        pwd = ["Password"])
+        pwd = str(Parameters["Password"])
         header = {'Content-Type':'application/x-www-form-urlencoded'}
         data = {'grant_type':'password','username':str(login),'password':str(pwd)}
         response = requests.post(self.AuthSrv, headers=header, data=data)
