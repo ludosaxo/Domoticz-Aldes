@@ -4,7 +4,7 @@
 
 
 """
-<plugin key="Aldes TOne Air" name="Aldes T.One Air Cloud" author="Ludo" version="1.0.0" externallink="https://github.com/ludosaxo/Domoticz-Aldes">
+<plugin key="AldesTOneAir" name="Aldes T One Air Cloud" author="Ludo" version="1.0.0" externallink="https://github.com/ludosaxo/Domoticz-Aldes">
     <description>Aldes T.One Air plugin to get Temperatures, setpoints and Modes<br/>Please provide your email and password of your Aldes account</description>
     <params>
         <param field="Username" label="Username" width="200px" required="true" default="">
@@ -22,6 +22,7 @@
 """
 
 import Domoticz
+import os
 import urllib.parse
 import json
 import sys
