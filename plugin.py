@@ -28,10 +28,7 @@ import json
 import sys
 import requests
 
-# Unit number according devide type
-# ID modem Aldes    : Modes
-# ID from Aldes     : Setpoint
-# ID from Aldes+100 : Temperatures
+UPDATE_TOKEN_COUNTER = 8640 #update token each 7 days (3600/10*7)
 
 class AldesPlugin:
     def __init__(self):
@@ -41,9 +38,20 @@ class AldesPlugin:
         self.thermostat_id = 0
         self.modem = 0
         self.serialNumber = 0
-        self.modes = {"A":"Off","B":"Confort","C":"Eco","D":"Prog A","E":"Prog B","F":"Clim","G":"Boost","H":"Prog C","I":"Prog D"}
+        self.modes = {
+            "A": "Off",
+            "B": "Confort",
+            "C": "Eco",
+            "D": "Prog A",
+            "E": "Prog B",
+            "F": "Clim",
+            "G": "Boost",
+            "H": "Prog C",
+            "I": "Prog D",
+        }
         self.isConnected = False
         self.heartBeatCounter = 0
+        self.updateTokenCounter = UPDATE_TOKEN_COUNTER 
         return
 
     def onStart(self):
@@ -112,7 +120,6 @@ class AldesPlugin:
             self.serialNumber = responseJson[0]['serial_number']
             Domoticz.Status("Device Status : "+str(self.isConnected))
             data = responseJson[0]['indicator']
-            #Domoticz.Status("Device data : "+str(data))
             #Return product data
             return data
         else:
@@ -152,7 +159,12 @@ class AldesPlugin:
             self.heartBeatCounter = 30
             Domoticz.Debug("Update data from Cloud")
             self.UpdateValues()
-            
+        self.updateTokenCounter = self.updateTokenCounter - 1
+        if(self.updateTokenCounter <=0):
+            #Update token
+            Domoticz.Debug("Updating token")
+            self.authenticating()
+            self.updateTokenCounter = UPDATE_TOKEN_COUNTER
             
     def onCommand(self, Unit, Command, Level, Hue):
         Domoticz.Status("onCommand called:" +str(Unit)+" ("+str(Command)+"/"+str(Level)+")")
@@ -160,6 +172,8 @@ class AldesPlugin:
             self.setSetpoint(Unit, Level)
         if Unit == 20:
             self.setMode(Level)
+        #trigger local update from server after 20 sec
+        self.heartBeatCounter = 2
         
     def setSetpoint(self, Unit, Level):
         urlUpdateThermostat = self.ProductSrv + "/" + self.modem + "/updateThermostats"
