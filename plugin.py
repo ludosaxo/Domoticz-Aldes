@@ -145,7 +145,7 @@ class AldesPlugin:
             for thermostat in productData["thermostats"]:
                 SetpointTemp = thermostat["TemperatureSet"]
                 Devices[unit+10].Update(nValue=SetpointTemp,sValue=str(SetpointTemp),Options=Options)
-                currentTemp = thermostat["CurrentTemperature"]
+                currentTemp = round(thermostat["CurrentTemperature"],1)
                 Devices[unit].Update(nValue=0,sValue=str(currentTemp))
                 unit+=1
         else:
@@ -172,8 +172,8 @@ class AldesPlugin:
             self.setSetpoint(Unit, Level)
         if Unit == 20:
             self.setMode(Level)
-        #trigger local update from server after 20 sec
-        self.heartBeatCounter = 2
+        #trigger local update from server after 1 min
+        self.heartBeatCounter = 6
         
     def setSetpoint(self, Unit, Level):
         urlUpdateThermostat = self.ProductSrv + "/" + self.modem + "/updateThermostats"
