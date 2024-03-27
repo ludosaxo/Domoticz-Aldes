@@ -140,6 +140,9 @@ class AldesPlugin:
             if mode == 'F' or mode == 'G' or mode == 'H' or mode == 'I':
                 minValue = int(productData['fmist'])
                 maxValue = int(productData['fmast'])
+            if mode == 'A'
+                minValue = 16
+                maxValue = 31
             Options={'ValueStep':'1', 'ValueMin':str(minValue), 'ValueMax':str(maxValue), 'ValueUnit':'°C'} 
             unit=2
             for thermostat in productData["thermostats"]:
